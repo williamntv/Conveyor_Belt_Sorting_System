@@ -25,42 +25,42 @@
  
  
 // Reflective sensor - Threshold Values 	
-#define BLACK_MAX  	 	 	 	1023 
-#define BLACK_MIN  	 	 	 	956 
-#define WHITE_MAX  	 	 	 	955 
-#define WHITE_MIN  	 	 	 	900 
-#define STEEL_MAX  	 	 	 	899  	 	 	 	 
-#define STEEL_MIN  	 	 	 	256 
+#define BLACK_MAX  	 	 	1023 
+#define BLACK_MIN  	 	 	956 
+#define WHITE_MAX  	 	 	955 
+#define WHITE_MIN  	 	 	900 
+#define STEEL_MAX  	 	 	899  	 	 	 	 
+#define STEEL_MIN  	 	 	256 
 #define ALUMINUM_MAX  	 	 	255  	 	 	 	 
 #define ALUMINUM_MIN  	 		0
  
  
 // DC motor 	 	 	
-#define DCMOTOR_FW_ROTATION  	0x07 
-#define DCMOTOR_BW_ROTATION  	0x0B 
-#define DCMOTOR_BRAKE_HIGH  	0x0F 
+#define DCMOTOR_FW_ROTATION  		0x07 
+#define DCMOTOR_BW_ROTATION  		0x0B 
+#define DCMOTOR_BRAKE_HIGH  		0x0F 
 #define DCMOTOR_DISABLED  	 	0x00 
-#define DCMOTOR_FIXED_SPEED  	0x50
+#define DCMOTOR_FIXED_SPEED  		0x50
  
  
 // Stepper motor 	 	 	 
 #define NUMBER_OF_COILS 	 	4 
-#define STEP1  	 	 	 	 	0b00110110  
-#define STEP2  	 	 	 	 	0b00101110 
-#define STEP3  	 	 	 	 	0b00101101 
-#define STEP4  	 	 	 	 	0b00110101 
-#define STEP_POSITION_BLACK  	0 
-#define STEP_POSITION_ALUMINUM 	50 
-#define STEP_POSITION_WHITE  	100 
-#define STEP_POSITION_STEEL  	150 
-#define DEFAULT_STEP_PER_REV 	200 
-#define HALF_WAY 	 	 		100 
+#define STEP1  	 	 	 	0b00110110  
+#define STEP2  	 	 	 	0b00101110 
+#define STEP3  	 	 	 	0b00101101 
+#define STEP4  	 	 	 	0b00110101 
+#define STEP_POSITION_BLACK  		0 
+#define STEP_POSITION_ALUMINUM 		50 
+#define STEP_POSITION_WHITE  		100 
+#define STEP_POSITION_STEEL  		150 
+#define DEFAULT_STEP_PER_REV 		200 
+#define HALF_WAY 	 	 	100 
 
  
 // define enum item type 
 typedef enum  
 { 
- 	ALUMINUM_ITEM = 0, 
+	ALUMINUM_ITEM = 0, 
  	STEEL_ITEM, 
  	WHITE_ITEM, 
  	BLACK_ITEM, 
@@ -136,33 +136,33 @@ void system_rampdown_delay_ms(uint16_t delay_amount);
 // Start program execution 
 int main(void)  
 { 
-    CLKPR = 0x80; // set CLKPCE = clock pre-scaler change enable to 1 
-    CLKPR = 0x01; // set the main clock to /2 = 8MHz 
+    	CLKPR = 0x80; // set CLKPCE = clock pre-scaler change enable to 1 
+    	CLKPR = 0x01; // set the main clock to /2 = 8MHz 
  	 
  	link *head; // Sets up head of queue  	link *tail; // Sets up tail of queue 
  	link *deQueuedLink; // Creating one pointer handle to be reused multiple times 
  	 
  	setup(&head, &tail); // Set up link list 
      
-    cli(); // disable global interrupt 
+    	cli(); // disable global interrupt 
      
-    DDRA = 0x0F; // stepper motor driver 
-    DDRB = 0xFF; // DC motor driver 
-    DDRC = 0xFF; // LEDs display 
-    DDRD = 0x00; // external interrupt 
+    	DDRA = 0x0F; // stepper motor driver 
+    	DDRB = 0xFF; // DC motor driver 
+    	DDRC = 0xFF; // LEDs display 
+    	DDRD = 0x00; // external interrupt 
  	DDRE = 0x00; // external interrupt 
-    DDRF = 0x00; // ADC control 
+    	DDRF = 0x00; // ADC control 
       
  	initialize_LCD(LS_BLINK | LS_ULINE); // set parameters to operate the LCD  	initialize_PWM(); // set PWM parameters to control DC motor speed  	initialize_ADC(); // set ADC parameters to begin conversion 
-    initialize_external_interrupts(); // set external interrupt pins 	 
+    	initialize_external_interrupts(); // set external interrupt pins 	 
  	 	     
-    sei(); // enable global interrupt 
+    	sei(); // enable global interrupt 
  	 
  	initialize_steppermotor_homing_position(); // set stepper motor to locate the home position 
  	 
  	control_DCmotor_state(START); // turn on the DC motor  	control_DCmotor_speed(DCMOTOR_FIXED_SPEED); // set DC motor's speed 
  	 	 
-    while(1)  
+    	while(1)  
  	{ 
  	 	// Check if the object has passed the OR sensor and PIND2 is Active High  
  	 	// and if it has been classified    	 	
@@ -261,8 +261,8 @@ int main(void)
 void initialize_PWM()  
 { 
  	TCCR0A |= ((1 << WGM01) | (1 << WGM00)); 	// enables:  
-												// Timer/Counter Mode: Fast PWM 
-												// Maximum (TOP) counter: 0xFF 
+							// Timer/Counter Mode: Fast PWM 
+							// Maximum (TOP) counter: 0xFF 
  	TCCR0A |= (1 << COM0A1); // clears OC0A on Compare Output, Fast PWM Mode 
  	TCCR0B |= ((1 << CS01) | (1 << CS00)); // sets clock source to 1/64 } 
  
@@ -314,7 +314,7 @@ void initialize_steppermotor_homing_position()
  	} 	 
  	 
 	steppermotor_current_position = 0;
-    write_lines_to_LCD("Found", "homing position"); 
+    	write_lines_to_LCD("Found", "homing position"); 
 } 
  
  
@@ -435,12 +435,18 @@ void control_DCmotor_state(DCmotor_state_t DCmotor_state)
  	switch(DCmotor_state)  
  	{ 
  	 	case START: 
- 	 	 	PORTB = DCMOTOR_FW_ROTATION; 
- 	 	 	break;  	 	case STOP: 
- 	 	 	PORTB = DCMOTOR_BRAKE_HIGH; // brake DC motor by setting all bits to 1s  
- 	 	 	break;  	 	case DISABLE: 
- 	 	 	PORTB = DCMOTOR_DISABLED; // disable DC motor by setting bits ENA and ENB to 0 
- 	 	 	break;  	 	default: 
+ 	 		PORTB = DCMOTOR_FW_ROTATION; 
+ 	 		break;
+		
+		case STOP: 
+ 	 		PORTB = DCMOTOR_BRAKE_HIGH; // brake DC motor by setting all bits to 1s  
+ 	 		break;
+		
+		case DISABLE: 
+ 	 		PORTB = DCMOTOR_DISABLED; // disable DC motor by setting bits ENA and ENB to 0 
+ 	 	 	break;
+		
+		default: 
  	 	 	break; 
  	} 
 } 
@@ -690,7 +696,8 @@ void ms_timer(uint16_t delay_amount)
  	 
  	for(int i = 0; i < delay_amount; i++)  
  	{ 
- 	 	while ((TIFR1 & 0x02) != 0x02); // Check if the interrupt flag bit is on?  	 	TIFR1 |= (1 << (OCF1A));  	// if the interrupt flag is on, clear it 
+ 	 	while ((TIFR1 & 0x02) != 0x02); // Check if the interrupt flag bit is on?  	 	
+		TIFR1 |= (1 << (OCF1A));  	// if the interrupt flag is on, clear it 
  	} 
 } 
  
